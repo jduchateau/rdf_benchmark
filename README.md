@@ -7,6 +7,8 @@ Original readme below.
 Known bug: Logging text from HDT needs to be manually removed from the HDT CSV file.
 
 
+
+
 # Benchmarking for Sophia
 
 This is an environment for benchmarking the [sophia] library,
@@ -37,7 +39,7 @@ use the `run_benchmark` command with the appropriate arguments.
 
 #### librdf
 
-one of the following (depending on your distribution):
+One of the following (depending on your distribution):
 
 * pacman -S redland
 * apt install librdf-dev
