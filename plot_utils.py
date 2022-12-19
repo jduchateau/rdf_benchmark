@@ -69,9 +69,9 @@ def plot_query_stats(data, color_key=color_key, group=False):
     else:
         (ax0, ax1) = (None, None)
 
-    my_plot(data, "t_load", title="Time (in s) to load an NT file in memory", loglog=True, color_key=color_key, ax=ax0)
+    my_plot(data, "t_load", title="Time (in s) to load an NT/HDT file in memory", loglog=True, color_key=color_key, ax=ax0)
     #my_plot(data, "t_load", xlim=(0,200_000), ylim=(0,10), savename="t_load_lin", title="Time (in s) to load an NT file in memory", ax=ax0)
-    my_plot(data, "r_load", title="Load rate (in triple/s) from an NT file in memory", logx=True, color_key=color_key, ax=ax1)
+    my_plot(data, "r_load", title="Load rate (in triple/s) from an NT/HDT file in memory", logx=True, color_key=color_key, ax=ax1)
 
 
     if group:
