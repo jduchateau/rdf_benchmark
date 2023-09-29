@@ -26,8 +26,9 @@ void query(const std::string &filename, benchmark_queries query) {
       if (e.has_value()) {
         auto const &quad = e.value();
         g.add(Statement{quad.subject(), quad.predicate(), quad.object()});
-      } else
-        std::cerr << e.error();
+      } // else
+				// there are thousands of invalid dates in the persondata file, ignore them
+        //std::cerr << e.error();
     }
   }
   auto const time_load_done = get_nanosec();
