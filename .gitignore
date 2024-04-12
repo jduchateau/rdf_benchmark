@@ -1,3 +1,4 @@
 .ipynb_checkpoints
 perf.*
 *.perf
+__pycache__
