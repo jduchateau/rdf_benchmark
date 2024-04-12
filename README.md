@@ -1,8 +1,14 @@
-This is a fork of the Sophia benchmarking to compare "normal" Sophia (FastGraph and LightGraph) with the HDT Sophia adapter.
+## RDF Library Benchmark
+
+There are several HDT and non-HDT libraries under parse and query tests on up to 10 million triples.
 Testing is done on an Intel i9-12900k.
 The person data files need to be converted to HDT for the HDT test to work.
-Original readme below.
-Known bug: Logging text from HDT needs to be manually removed from the HDT CSV file.
+
+This is a fork of the Sophia benchmarking suite.
+The original purpose of the fork was to to compare "normal" Sophia (FastGraph and LightGraph) with the HDT Sophia adapter.
+However as the original is not updated much you can just use this one as a general RDF library benchmark with more up to date versions.
+
+## Original README
 
 This is an environment for benchmarking the [sophia] library,
 and comparing it with other RDF libraries.
