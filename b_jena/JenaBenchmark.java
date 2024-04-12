@@ -1,20 +1,17 @@
-import java.io.*;
-import java.nio.file.Path;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
-import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.lang.PipedRDFIterator;
-import org.apache.jena.riot.lang.PipedRDFStream;
-import org.apache.jena.riot.lang.PipedTriplesStream;
-import org.apache.jena.util.*;
-import org.apache.jena.vocabulary.*;
-
-import org.apache.jena.riot.*;
-import org.apache.jena.graph.*;
-import org.apache.jena.sparql.core.*;
-import org.apache.jena.riot.system.*;
+import org.apache.jena.atlas.iterator.IteratorCloseable;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.system.AsyncParser;
+import org.apache.jena.vocabulary.RDF;
 
 public class JenaBenchmark {
     public static void main(String[] args) {
@@ -34,30 +31,14 @@ public class JenaBenchmark {
     public static void benchmark_parse(String[] args) {
         System.err.println("benchmark: parse");
 
-        Model model = ModelFactory.createDefaultModel();
-        final PipedRDFIterator<Triple> iter = new PipedRDFIterator<Triple>();
-        final PipedRDFStream<Triple> stream = new PipedTriplesStream(iter);
         final long t0 = System.nanoTime();
         long c = 0;
-        final ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            // Call the parsing process.
-            try {
-                RDFDataMgr.parse(stream, args[1], org.apache.jena.riot.Lang.NTRIPLES);
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-        });
+        final IteratorCloseable<Triple> iter = AsyncParser.asyncParseTriples(args[1]);
+
         while (iter.hasNext()) {
             if (iter.next() != null) {
                 c += 1;
             }
-        }
-        executor.shutdown();
-        try {
-            executor.awaitTermination(20, TimeUnit.SECONDS);
-        } catch (final InterruptedException e) {
-            e.printStackTrace();
         }
         final long t1 = System.nanoTime();
         final double diff = (t1 - t0)/1e9;
@@ -91,14 +72,14 @@ public class JenaBenchmark {
         t0 = System.nanoTime();
         Resource personClass = model.createResource("http://dbpedia.org/ontology/Person");
         Resource vincent = model.createResource("http://dbpedia.org/resource/Vincent_Descombes_Sevoie");
-        SimpleSelector selector;
+        
+        StmtIterator results;
         if (queryNum == 1) {
-            selector = new SimpleSelector(null, RDF.type, personClass);
+            results = model.listStatements(null,RDF.type,personClass);
         } else {// if (queryNum == 2) {
             Resource no_obj = null;
-            selector = new SimpleSelector(vincent, null, no_obj);
+            results = model.listStatements(vincent, null, no_obj);
         }
-        StmtIterator results = model.listStatements(selector);
         long nb_stmts = 0;
         while (results.hasNext()) {
             Statement s = results.next();
@@ -134,6 +115,7 @@ public class JenaBenchmark {
                 .get()
                 .replaceAll("VmRSS:\\h*", "")
                 .replaceAll(" *kB", "");
+            br.close();
             return Long.parseLong(vmsize);
         }
         catch (Exception ex) {

@@ -1,2 +1,5 @@
 apache-jena-*
 *.class
+/bin/
+.project
+.classpath
