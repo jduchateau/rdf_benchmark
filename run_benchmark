@@ -23,6 +23,7 @@ TOOLS = {
     "python":         "./b_python/run     {task} '{filename}'",
     "pypy":           "./b_python/run     {task} '{filename}' pypy",
     "rdf4cpp":           "./b_rdf4cpp/run     {task} '{filename}'",
+    "elixir":           "./b_elixir/run     {task} '{filename}'",
 }
 
 FILES = [
